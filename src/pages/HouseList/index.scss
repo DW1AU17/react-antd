@@ -1,0 +1,16 @@
+.houselist {
+    margin-bottom: 50px;
+    .item {
+        .left {
+            img {
+                width: 90px;
+            }
+        }
+        .right {
+            height: 72px;
+            .aline {
+                width: 100%;
+            }
+        }
+    }
+}
