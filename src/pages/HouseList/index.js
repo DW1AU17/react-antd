@@ -29,13 +29,16 @@ export default class HouseList extends Component {
                 hasMore: false
             })
         }
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows([...houselist, ...res.data.houseList]),
-            houselist: [...houselist, ...res.data.houseList],
-            pageNum: pageNum + 1,
-            isLoading: false,
-            hasMore: true
-        })
+        setTimeout(() => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows([...houselist, ...res.data.houseList]),   // 数据添加到实例中
+                houselist: [...houselist, ...res.data.houseList],
+                pageNum: pageNum + 1,
+                isLoading: false,
+                hasMore: true
+            })
+        },750)
+        
     }
 
     onEndReached = () => {
@@ -65,16 +68,16 @@ export default class HouseList extends Component {
         }
         return (
             <ListView
-                dataSource={this.state.dataSource}
+                dataSource={this.state.dataSource}  // 初始化数据 必须是ListView.DataSource实例
                 renderFooter={() => (<div style={{ textAlign: 'center' }}>{this.state.hasMore ? 'Loading...' : '老铁没数据了'}</div>)}
-                renderRow={row}
+                renderRow={row}       // 渲染每一项
                 className="houselist"
-                pageSize={4}
+                pageSize={4}        // 下一次渲染的行数
                 useBodyScroll
                 onScroll={() => this.setState({ isLoading: true })}
-                scrollRenderAheadDistance={100}
-                onEndReached={this.onEndReached}
-                onEndReachedThreshold={10}
+                // scrollRenderAheadDistance={100}      // 一个行接近屏幕范围多少像素之内的时候，就开始渲染这一行
+                onEndReached={this.onEndReached}      // 再次获取数据
+                onEndReachedThreshold={10}          // 距离底部临界值, 触发 onEndReached
             />
         )
     }
