@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import NavHeader from '../../components/NavHeader'
 import styles from './index.module.scss'
-import { WingBlank, WhiteSpace } from 'antd-mobile'
+import { WingBlank } from 'antd-mobile'
+import { setToken } from '../../utils'
 
 import { withFormik, Form, Field, ErrorMessage } from 'formik'
 // withFormik 高阶组件: 为组件提供状态, 方法, 校验规则
@@ -20,7 +22,7 @@ class Login extends Component {
                 <NavHeader>登录页面</NavHeader>
                 {/* 登录表单 */}
                 <WingBlank>
-                    <Form>
+                    <Form autoComplete="off">
                         <div className={styles.formItem}>
                             <Field 
                                 name="username"
@@ -38,7 +40,6 @@ class Login extends Component {
                             <ErrorMessage name="password" component="div" className={styles.error} />
                         </div>
                         <button className={styles.submit} type="submit">登 录</button>
-
                     </Form>
 
 
@@ -49,8 +50,8 @@ class Login extends Component {
 }
 
 // 验证规则：
-const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
-const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
+const REG_UNAME = /^[a-zA-Z_\d]{3,8}$/
+const REG_PWD = /^[a-zA-Z_\d]{4,12}$/
 
 Login = withFormik({
     // 1. 给表单提供状态 (相当于组件中的state)
@@ -59,20 +60,35 @@ Login = withFormik({
     validationSchema: Yup.object().shape({
         username: Yup.string()             // 类型
             .required('账号为必填项')       // (未填时提示)
-            .matches(REG_UNAME, '长度为5到8位，只能出现数字、字母、下划线'),    // (输入时格式不对时,提示验证规则)
+            .matches(REG_UNAME, '长度为3到8位，只能出现数字、字母、下划线'),    // (输入时格式不对时,提示验证规则)
         password: Yup.string()
             .required('密码为必填项')
-            .matches(REG_PWD, '长度为5到12位，只能出现数字、字母、下划线')
+            .matches(REG_PWD, '长度为4到12位，只能出现数字、字母、下划线')
     }),
     // 3. 提交表单 (Form组件提供方法)
-    handleSubmit: (values, {props}) => {
+    handleSubmit: async (values, {props}) => {
         // 相当于拿到 state, props
-        console.log(values, props)
+        // console.log(props)
+        // 1. 发送请求
+        let res = await axios.get("/user/login", { params: values })
+        if (res.status === 200) {
+            // 2. 登录成功
+            // 2.1 保存token到本地
+            setToken(res.data.token)
+            // 2.2 返回之前的页面 (根据路由是否传递额外参数)
+            if (props.location.state) {
+                // 2.3 路由存在额外参数， 返回参数页面
+                // props.history.push()  -> 不使用push                   ['/home','/login','/rent']
+                props.history.replace(props.location.state.form)     //  ['/home','/rent']
+            } else {
+                // 2.4 默认返回上一页
+                props.history.go(-1)
+            }
+        } else {
+            // 3. 失败 (提示账号密码错误)
+            console.log(res.data.msg)
+        }
     }
-
-
-
-
 })(Login)
 
 export default Login

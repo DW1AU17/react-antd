@@ -46,11 +46,16 @@ for (let i = 0; i < 30; i++) {
     }))
 }
 
+// token
+let token = Random.natural()
+
+
 
 export {
     data,
     cityIndex,
     cityList,
-    houseList
+    houseList,
+    token
 }
 
