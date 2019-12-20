@@ -1,42 +1,67 @@
 import React, { Component } from 'react'
-import { createForm, formShape } from 'rc-form';
+import logo from '../../assets/logo.png'
+// import withRoute from '../../components/withMouse'
 
-class Form extends Component {
-  state = {
-    msg: ''
+class Logo extends Component {
+  render() {
+    const { mouse: { x, y } } = this.props
+    return (
+      <img src={logo} style={{ position: 'absolute', left: x, top: y }} />
+    )
   }
-  static propTypes = {
-    form: formShape,
-  };
+}
+// 封装一个render prop模式 的高阶组件
+class Mouse extends Component {
+  state = {
+    x: 0,
+    y: 0
+  }
 
-  submit = () => {
-    this.props.form.validateFields((error, value) => {
-      console.log(error, value);
-    });
+  handleMouseMove = (e) => {
+    this.setState({
+      x: e.clientX,
+      y: e.clientY,
+    })
   }
 
   render() {
-    let errors;
-    const { getFieldProps, getFieldError } = this.props.form;
-    let that = this
+    // let {x, y} = this.state
     return (
-      <div>
-        <input {...getFieldProps('normal')} />
-        <br></br>
-        <input {...getFieldProps('required', {
-          onChange(e) {
-            that.setState({
-              msg: e.target.value
-            })
-           }, 
-          initialValue: that.state.msg,
-          rules: [{ required: true }],
-        })} />
-        {(errors = getFieldError('required')) ? errors.join(',') : null}
-        <button onClick={this.submit}>submit</button>
+      <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
+        {/* render prop模式 */}
+        {/* {this.props.render(this.state)} */}
+        {/* children prop模式 */}
+        {this.props.children(this.state)}
       </div>
-    );
+    )
   }
 }
 
-export default createForm()(Form);
+// children 是在props里的
+// function Header({ children }) {
+//   return <div>{children}</div>
+// }
+
+function withRoute(Component) {
+  return class extends Component {
+    render() {
+      return (
+        <div style={{height: '100%'}}>
+          {/* render prop模式  */}
+          {/* <Mouse render={mouse => (
+            <Component {...this.props} mouse={mouse} />
+          )} /> */}
+          {/* children prop模式 */}
+          <Mouse>
+            { mouse => <Component {...this.props} mouse={mouse} /> }
+          </Mouse>
+
+        </div>
+      )
+    }
+  }
+}
+
+
+export default withRoute(Logo)
+

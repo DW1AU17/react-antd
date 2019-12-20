@@ -5,7 +5,7 @@ export default class Demo extends React.Component {
     render() {
         return (
             <WingBlank>
-                <WhiteSpace /><Button type="primary" onClick={() => this.props.history.push('/user/login')}>登录</Button><WhiteSpace />
+                <WhiteSpace /><Button type="primary" onClick={() => this.props.history.push('/login')}>登录</Button><WhiteSpace />
             </WingBlank>
         );
     }

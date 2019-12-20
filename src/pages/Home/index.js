@@ -45,7 +45,7 @@ export default class Home extends Component {
 
     render() {
         return (
-            <div className="home">
+            <div className="home" style={{height: '100%'}}>
                 <Route exact path="/home" component={Index} />  
                 <Route path="/home/msg" component={Msg} />
                 <Route path="/home/house" component={HouseList} />
