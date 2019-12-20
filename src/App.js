@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Home from './pages/Home'
 import CityList from './pages/CityList'
 import Login from './pages/Login'
+import Hook from './pages/Hook'
 import AuthRoute from './components/AuthRoute'
 
 function Detail() {
@@ -18,6 +19,8 @@ function App() {
       <Route path="/citylist" component={ CityList } /> 
       
       <Route path="/login" component={Login} />
+      <Route path="/hook" component={Hook} />
+
       {/* 需要登录控制的页面 */}
       <AuthRoute path="/detail" component={Detail} />
       

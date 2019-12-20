@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
-import { Flex } from 'antd-mobile'
+import { Flex, Button, WhiteSpace } from 'antd-mobile'
 import "./index.scss"
+
+function Dome() {
+    return (
+        <div style={{marginTop: '100px'}}>
+            这是一个demo组件
+        </div>
+    )
+}
+
 
 export default class Index extends Component {
     state = { visible: false };
@@ -18,6 +27,7 @@ export default class Index extends Component {
                         <span>你想住在哪里?</span>
                     </div>
                 </Flex>
+                <Button type="primary" onClick={() => this.props.history.push('/hook')}>Hook 页面</Button><WhiteSpace />
             </div>
         )
     }
